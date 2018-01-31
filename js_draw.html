@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>JS 重放手绘图</title>
+  <style type="text/css">
+    body{
+      background: #456E89;
+    }
+
+    .canvas {
+      height: 400px;
+      width: 400px; 
+      margin: 0 auto;
+      font-family: arial;
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <canvas id="cvs" width="400" height="400"></canvas>
+  </div>
+
+  <script type="text/javascript">
+    var cvs = document.getElementById("cvs").getContext("2d");
+    
+    function Anim(opt) { //初始化值
+      this.opt = opt;
+    }
+
+    //node 表示画布节点
+    //staX 表示开始x坐标
+    //staY 表示开始y坐标
+    //len表示终点坐标，
+    //timing表示运行的间隔时间， 
+    //num表示坐标增长的大小 
+    //direc表示判断绘制线条的方向，false表示X轴，ture表示Y轴
+    //lw表示线宽的大小 
+    //color 表示绘制线条颜色
+    Anim.prototype.draw = function() { //绘制直线的线条      
+      var opt = this.opt; //设置对象的属性
+      var adx = opt.staX;
+      var ady = opt.staY;
+      var that = {
+        x: opt.staX,
+        y: opt.staY
+      };
+
+      var index = 0;
+      var Time = setInterval(function() {
+        opt.direc //判断绘制方向
+        ?
+        opt.len > ady ? ady += opt.num : ady -= opt.num :
+        opt.len > adx ? adx += opt.num : adx -= opt.num;
+
+        //if(adx == opt.len || ady == opt.len) { //停止循环
+        if(index >= opt.data.length - 1) { //停止循环
+          clearInterval(Time);
+        }
+
+        //opt.Node.beginPath(); // 开始绘制线条
+        //opt.Node.moveTo(that.x, that.y);        
+        //opt.Node.lineTo(adx, ady);
+        opt.Node.lineTo(opt.data[index][0], opt.data[index][1]);
+        index += 1;
+        opt.Node.lineWidth = opt.lw || 1;
+        opt.Node.strokeStyle = opt.color;
+        opt.Node.stroke();
+      }, opt.timing);
+    };
+
+    var line1 = new Anim({ //实例
+      Node: cvs,
+      color: "#fff",
+      staX: 0,
+      staY: 58,
+      len: 300,
+      timing: 1,
+      num: 1,
+      direc: false,
+      lw: 1,
+      data: [[307, 113], [300, 118], [288, 126], [273, 134], [251, 141], 
+             [226, 147], [200, 154], [173, 161], [150, 169], [127, 175], 
+             [111, 180], [97, 186], [86, 191], [77, 195], [72, 196], 
+             [68, 199]]
+    });
+
+    line1.draw(); //执行绘制
+  </script>
+</body>
+</html>
